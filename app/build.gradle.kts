@@ -5,11 +5,11 @@ plugins {
 }
 
 android {
-    namespace = "com.example.skindtrade"
+    namespace = "com.example.skintrade"
     compileSdk = 36
 
     defaultConfig {
-        applicationId = "com.example.skindtrade"
+        applicationId = "com.example.skintrade"
         minSdk = 24
         targetSdk = 36
         versionCode = 1
@@ -56,4 +56,9 @@ dependencies {
     androidTestImplementation(libs.androidx.compose.ui.test.junit4)
     debugImplementation(libs.androidx.compose.ui.tooling)
     debugImplementation(libs.androidx.compose.ui.test.manifest)
+    implementation("androidx.navigation:navigation-compose:2.7.7")
+    implementation("androidx.compose.material3:material3:1.2.0")
+    implementation("androidx.compose.material3:material3-window-size-class:1.2.0")
+    implementation("androidx.window:window:1.1.0")
+
 }
