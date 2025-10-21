@@ -43,3 +43,10 @@ com.example.skintrade
 1. Clonar el repositorio:
    ```bash
    git clone https://github.com/usuario/SkinTrade.git
+
+Nombre: Leonardo Mendez
+Carrera: Ingeniería en Informática
+Asignatura: DESARROLLO DE APLICACIONES MOVILES
+Institución: Duoc UC
+Seccion: 008D
+Profesor: Ronald Villalobos
