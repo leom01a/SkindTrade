@@ -1,41 +1,47 @@
 package com.example.skintrade.viewmodel
 
-import androidx.lifecycle.ViewModel
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.viewModelScope
+import androidx.room.Room
+import com.example.skintrade.data.UsuarioEntity
+import com.example.skintrade.data.db.AppDatabase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import com.example.skintrade.model.UsuarioUiState
-import com.example.skintrade.model.UsuarioErrores
+import kotlinx.coroutines.launch
 
-class UsuarioViewModel : ViewModel() {
+class UsuarioViewModel(app: Application) : AndroidViewModel(app) {
 
-    private val _uiState = MutableStateFlow(UsuarioUiState())
-    val uiState: StateFlow<UsuarioUiState> = _uiState
+    private val _usuario = MutableStateFlow<UsuarioEntity?>(null)
+    val usuario: StateFlow<UsuarioEntity?> = _usuario
 
-    private val _errores = MutableStateFlow(UsuarioErrores())
-    val errores: StateFlow<UsuarioErrores> = _errores
+    private val db = Room.databaseBuilder(
+        app.applicationContext,
+        AppDatabase::class.java,
+        "skindtrade_db"
+    ).build()
 
-    fun actualizarCampo(campo: String, valor: String) {
-        when (campo) {
-            "nombre" -> _uiState.value = _uiState.value.copy(nombre = valor)
-            "correo" -> _uiState.value = _uiState.value.copy(correo = valor)
-            "clave" -> _uiState.value = _uiState.value.copy(clave = valor)
-            "direccion" -> _uiState.value = _uiState.value.copy(direccion = valor)
+    fun guardarUsuario(nombre: String, correo: String, direccion: String) {
+        viewModelScope.launch {
+            val nuevoUsuario = UsuarioEntity(
+                nombre = nombre,
+                correo = correo,
+                direccion = direccion
+            )
+            db.usuarioDao().insertarUsuario(nuevoUsuario)
         }
     }
 
-    fun validarFormulario(): Boolean {
-        val errores = UsuarioErrores(
-            nombre = if (_uiState.value.nombre.isBlank()) "Nombre requerido" else null,
-            correo = if (!_uiState.value.correo.contains("@")) "Correo inválido" else null,
-            clave = if (_uiState.value.clave.length < 4) "Clave muy corta" else null,
-            direccion = if (_uiState.value.direccion.isBlank()) "Dirección requerida" else null
-        )
-        _errores.value = errores
-        return listOf(
-            errores.nombre,
-            errores.correo,
-            errores.clave,
-            errores.direccion
-        ).all { it == null }
+    fun cargarUltimoUsuario() {
+        viewModelScope.launch {
+            val ultimo = db.usuarioDao().obtenerUltimoUsuario()
+            _usuario.value = ultimo
+        }
     }
 }
+
+
+
+
+
+
