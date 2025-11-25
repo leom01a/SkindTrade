@@ -17,26 +17,32 @@ fun RegistroScreen(
     navController: NavController,
     viewModel: UsuarioViewModel = androidx.lifecycle.viewmodel.compose.viewModel()
 ) {
+
     var nombre by remember { mutableStateOf("") }
     var correo by remember { mutableStateOf("") }
-    var clave by remember { mutableStateOf("") }
+    var clave by remember { mutableStateOf("") }   // solo visual
     var direccion by remember { mutableStateOf("") }
+    var esDueno by remember { mutableStateOf(false) }
+
+    // Rol según el switch
+    val rol = if (esDueno) "DUENO" else "CLIENTE"
 
     Scaffold(
         topBar = {
             TopAppBar(title = { Text("Registro de usuario") })
         }
     ) { padding ->
+
         Column(
             modifier = Modifier
                 .padding(padding)
                 .padding(20.dp)
                 .fillMaxSize(),
-            verticalArrangement = Arrangement.Center,
+            verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
 
-            // Campo Nombre
+            // Nombre
             OutlinedTextField(
                 value = nombre,
                 onValueChange = { nombre = it },
@@ -45,7 +51,7 @@ fun RegistroScreen(
             )
             Spacer(Modifier.height(12.dp))
 
-            // Campo Correo
+            // Correo
             OutlinedTextField(
                 value = correo,
                 onValueChange = { correo = it },
@@ -54,7 +60,7 @@ fun RegistroScreen(
             )
             Spacer(Modifier.height(12.dp))
 
-            // Campo Clave
+            // Contraseña (no se guarda aún)
             OutlinedTextField(
                 value = clave,
                 onValueChange = { clave = it },
@@ -64,21 +70,35 @@ fun RegistroScreen(
             )
             Spacer(Modifier.height(12.dp))
 
-            // Campo Dirección
+            // Dirección
             OutlinedTextField(
                 value = direccion,
                 onValueChange = { direccion = it },
                 label = { Text("Dirección") },
                 modifier = Modifier.fillMaxWidth()
             )
-
             Spacer(Modifier.height(20.dp))
+
+            // Switch de rol
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text("¿Eres dueño?")
+                Spacer(modifier = Modifier.width(8.dp))
+                Switch(
+                    checked = esDueno,
+                    onCheckedChange = { esDueno = it }
+                )
+            }
+
+            Spacer(Modifier.height(30.dp))
 
             // Botón Guardar
             Button(
                 onClick = {
                     if (nombre.isNotBlank() && correo.isNotBlank() && direccion.isNotBlank()) {
-                        viewModel.guardarUsuario(nombre, correo, direccion)
+                        viewModel.guardarUsuario(nombre, correo, direccion, rol)
                         navController.navigate(Rutas.Resumen.ruta)
                     }
                 },
@@ -91,5 +111,4 @@ fun RegistroScreen(
         }
     }
 }
-
 

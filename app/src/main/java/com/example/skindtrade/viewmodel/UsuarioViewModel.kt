@@ -21,14 +21,16 @@ class UsuarioViewModel(app: Application) : AndroidViewModel(app) {
         "skindtrade_db"
     ).build()
 
-    fun guardarUsuario(nombre: String, correo: String, direccion: String) {
+    fun guardarUsuario(nombre: String, correo: String, direccion: String, rol: String) {
         viewModelScope.launch {
             val nuevoUsuario = UsuarioEntity(
                 nombre = nombre,
                 correo = correo,
-                direccion = direccion
+                direccion = direccion,
+                rol = rol
             )
             db.usuarioDao().insertarUsuario(nuevoUsuario)
+            _usuario.value = nuevoUsuario   // disponible al tiro para la UI
         }
     }
 
@@ -39,9 +41,5 @@ class UsuarioViewModel(app: Application) : AndroidViewModel(app) {
         }
     }
 }
-
-
-
-
 
 

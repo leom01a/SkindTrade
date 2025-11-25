@@ -59,6 +59,13 @@ fun HomeScreen(navController: NavController) {
             Button(onClick = { navController.navigate(Rutas.Resumen.ruta) }) {
                 Text("Ver último usuario registrado", style = MaterialTheme.typography.bodyLarge)
             }
+
+            Spacer(Modifier.height(12.dp))
+
+
+            Button(onClick = { navController.navigate(Rutas.Carrito.ruta) }) {
+                Text("Ver carrito", style = MaterialTheme.typography.bodyLarge)
+            }
         }
     }
 }

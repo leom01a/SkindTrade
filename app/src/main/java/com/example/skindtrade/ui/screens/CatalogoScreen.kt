@@ -14,11 +14,15 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.skintrade.viewmodel.CartViewModel
 import com.example.skintrade.viewmodel.SkinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CatalogoScreen(viewModel: SkinViewModel = viewModel()) {
+fun CatalogoScreen(
+    viewModel: SkinViewModel = viewModel(),
+    cartViewModel: CartViewModel = viewModel()   // 👈 NUEVO: ViewModel del carrito
+) {
     val skins = viewModel.skins.collectAsState().value
     var datosCargados by remember { mutableStateOf(false) }
 
@@ -80,6 +84,18 @@ fun CatalogoScreen(viewModel: SkinViewModel = viewModel()) {
                                         text = "Precio: ${skin.precio} USD",
                                         style = MaterialTheme.typography.bodyMedium
                                     )
+
+                                    Spacer(Modifier.height(12.dp))
+
+                                    // 👇 NUEVO: botón para agregar al carrito
+                                    Button(
+                                        onClick = {
+                                            cartViewModel.agregarAlCarrito(skin)
+                                        },
+                                        modifier = Modifier.fillMaxWidth()
+                                    ) {
+                                        Text("Agregar al carrito")
+                                    }
                                 }
                             }
                         }
