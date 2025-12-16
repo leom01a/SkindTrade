@@ -61,4 +61,71 @@ class CartViewModelTest {
         assertEquals(0.0, total, 0.0001)
         assertEquals(0, viewModel.items.value.size)
     }
+
+    @Test
+    fun agregarMismoSkinDosVecesSumaCorrectamente() {
+        val viewModel = CartViewModel()
+
+        val skin = SkinEntity(
+            id = 1,
+            nombre = "Glock | Watermelon",
+            precio = 20.0,
+            imagenRes = 0
+        )
+
+        viewModel.agregarAlCarrito(skin)
+        viewModel.agregarAlCarrito(skin)
+
+        val total = viewModel.total()
+
+        assertEquals(40.0, total, 0.0001)
+    }
+
+    @Test
+    fun carritoContieneCantidadCorrectaDeItems() {
+        val viewModel = CartViewModel()
+
+        val skin1 = SkinEntity(1, "AK", 10.0, 0)
+        val skin2 = SkinEntity(2, "AWP", 20.0, 0)
+
+        viewModel.agregarAlCarrito(skin1)
+        viewModel.agregarAlCarrito(skin2)
+
+        assertEquals(2, viewModel.items.value.size)
+    }
+
+    @Test
+    fun limpiarCarritoVariasVecesNoFalla() {
+        val viewModel = CartViewModel()
+
+        viewModel.limpiarCarrito()
+        viewModel.limpiarCarrito()
+
+        val total = viewModel.total()
+
+        assertEquals(0.0, total, 0.0001)
+    }
+
+    // ---------------------------
+    // TEST QUE FALLA A PROPÓSITO
+    // ---------------------------
+
+    @Test
+    fun totalEsperadoIncorrectoFallaIntencionalmente() {
+        val viewModel = CartViewModel()
+
+        val skin = SkinEntity(
+            id = 1,
+            nombre = "AK-47 | Redline",
+            precio = 10.0,
+            imagenRes = 0
+        )
+
+        viewModel.agregarAlCarrito(skin)
+
+        val total = viewModel.total()
+
+        // Assert incorrecto a propósito (este test DEBE fallar)
+        assertEquals(20.0, total, 0.0001)
+    }
 }
